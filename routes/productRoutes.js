@@ -4,6 +4,7 @@ import { upload } from "../middleware/multer.js"
 import adminAuth from "../middleware/adminAuth.js"
 
 
+
 const ProductRouter = express.Router()
 
 ProductRouter.post("/addproduct" ,
@@ -16,6 +17,18 @@ ProductRouter.post("/addproduct" ,
 
 ProductRouter.get("/list" , listProduct)
 ProductRouter.post("/remove/:id" , adminAuth ,removeProduct)
+
+ProductRouter.put(
+  "/update/:productId",
+  adminAuth,
+  upload.fields([
+    { name: "image1" },
+    { name: "image2" },
+    { name: "image3" },
+    { name: "image4" },
+  ]),
+  updateProduct
+);
 
 
 export default ProductRouter

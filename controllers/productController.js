@@ -2,8 +2,6 @@ import { uploadOnCloudinary } from "../config/cloudinary.js";
 import Product from "../model/productModel.js";
 
 
-
-
 export const addProduct = async(req, res)=>{
     try {
         let {name, description, price, category, subCategory , sizes, bestSeller }= req.body;
@@ -62,33 +60,78 @@ export const listProduct = async(req,res)=>{
 
 export const updateProduct = async (req, res) => {
   try {
-    const { productId, price, sizes } = req.body;
+    const { productId } = req.params;
 
-    if (!productId) {
-      return res.status(400).json({ message: "Product ID is required" });
-    }
+    let {
+      name,
+      description,
+      price,
+      category,
+      subCategory,
+      sizes,
+      bestSeller
+    } = req.body;
 
-    const updateFields = {};
-    if (price !== undefined) updateFields.price = price;
-    if (sizes !== undefined) updateFields.sizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes);
-
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      { $set: updateFields },
-      { new: true }
-    );
-
-    if (!updatedProduct) {
+    // find product
+    const product = await Product.findById(productId);
+    if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    // ✅ Update basic fields
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price) product.price = Number(price);
+    if (category) product.category = category;
+    if (subCategory) product.subCategory = subCategory;
+
+    // ✅ FIX bestSeller (important)
+    if (bestSeller !== undefined) {
+      product.bestSeller = bestSeller === "true";
+    }
+
+    // ✅ sizes
+    if (sizes) {
+      product.sizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes);
+    }
+
+    // 🔥 UPDATE IMAGES (Cloudinary)
+    if (req.files) {
+      if (req.files.image1) {
+        const img = await uploadOnCloudinary(req.files.image1[0].path);
+        product.image1 = img.secure_url;
+      }
+
+      if (req.files.image2) {
+        const img = await uploadOnCloudinary(req.files.image2[0].path);
+        product.image2 = img.secure_url;
+      }
+
+      if (req.files.image3) {
+        const img = await uploadOnCloudinary(req.files.image3[0].path);
+        product.image3 = img.secure_url;
+      }
+
+      if (req.files.image4) {
+        const img = await uploadOnCloudinary(req.files.image4[0].path);
+        product.image4 = img.secure_url;
+      }
+    }
+
+    await product.save();
+
     return res.status(200).json({
+      success: true,
       message: "Product updated successfully",
-      product: updatedProduct,
+      product
     });
+
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Update error:", error);
+    return res.status(500).json({
+      message: "Update failed",
+      error: error.message
+    });
   }
 };
 
