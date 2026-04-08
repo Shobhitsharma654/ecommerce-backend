@@ -71,27 +71,3 @@ export const getProductReview = async (req, res) => {
   }
 };
 
-
-
-// export const getProductReview = async(req,res)=>{
-//      try {
-//         const { productId } = req.params;
-//         const reviews = await Review.find({ product: productId }).populate("author", "name")
-//          .sort({ createdAt: -1 }); 
-        
-
-//         const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-//         const averageRating = reviews.length ? (totalRating / reviews.length).toFixed(1) : 0;
-
-//         let ratingText = "Poor";
-//         if (averageRating >= 4.5) ratingText = "Excellent";
-//         else if (averageRating >= 4) ratingText = "Very Good";
-//         else if (averageRating >= 3) ratingText = "Good";
-//         else if (averageRating >= 2) ratingText = "Average";
-
-//         return res.status(200).json({ reviews, averageRating, ratingText });
-//     } catch (err) {
-//         console.error(err);
-//         return res.status(500).json({ success: false, message: "Failed to fetch reviews" });
-//     }
-// }
