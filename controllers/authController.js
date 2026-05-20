@@ -35,8 +35,8 @@ export const register = async(req, res)=>{
         const token = await genToken(user._id);
            res.cookie("token", token, {
             httpOnly: true,
-            secure:false,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -85,8 +85,8 @@ if (!email || !password) {
 
            res.cookie("token", token, {
             httpOnly: true,
-            secure:false,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
    
@@ -109,8 +109,8 @@ export const logout = async (req,res)=>{
     try {
        res.clearCookie("token", {
   httpOnly: true,
-  secure: false,
-  sameSite: "Strict"
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict"
 });
         return res.json({success:true, message:"User Logout"})
     } catch (error) {
@@ -133,8 +133,8 @@ try {
         
         res.cookie("token",token, {
             httpOnly:true,
-            secure:false,
-            sameSite:"Strict",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
             maxAge:   7*24*60*60*1000
         });
 
@@ -154,8 +154,8 @@ export const adminLogin = async(req,res) => {
     let  token = await genToken1(email);     
         res.cookie("token",token, {
             httpOnly:true,
-            secure:false,
-            sameSite:"Strict",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
             maxAge:   7*24*60*60*1000
         });
         return res.status(200).json(token)
