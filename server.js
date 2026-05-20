@@ -20,7 +20,8 @@ app.use(cors({
     process.env.FRONTEND_URL,
     process.env.ADMIN_URL,
     process.env.ADMIN_URL_PRODUCTION,
-  ],
+    process.env.FRONTEND_URL_PRODUCTION,
+  ].filter(Boolean),
     credentials:true,
 }))
 app.use(cookieParser())
