@@ -1,46 +1,46 @@
 import jwt from "jsonwebtoken";
 
-const adminAuth = async (req, res, next) => {
+export const adminLogin = async (req, res) => {
 
   try {
 
-    const token = req.cookies.token;
+    const { email, password } = req.body;
 
-    console.log("Cookies:", req.cookies);
-
-    if (!token) {
-
-      return res.status(401).json({
-        message: "Not Authorized, Login Again",
+    // Check admin credentials
+    if (
+      email !== process.env.ADMIN_EMAIL ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
+      return res.status(400).json({
+        message: "Invalid Credentials",
       });
-
     }
 
-    const verifyToken = jwt.verify(
-      token,
-      process.env.JWT_SECRET
+    // Create token
+    const token = jwt.sign(
+      { email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
 
-    if (!verifyToken) {
+    // ADD COOKIE HERE
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
 
-      return res.status(401).json({
-        message: "Invalid Token",
-      });
-
-    }
-
-    req.adminEmail = process.env.ADMIN_EMAIL;
-
-    next();
+    return res.status(200).json({
+      success: true,
+      message: "Admin Login Successful",
+    });
 
   } catch (error) {
 
     console.log(error.message);
 
     return res.status(500).json({
-      message: "Admin Auth Error",
+      message: "Admin Login Error",
     });
   }
 };
-
-export default adminAuth;

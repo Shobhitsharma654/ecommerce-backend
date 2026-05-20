@@ -16,7 +16,7 @@ const app=express()
 connectDB();
 
 app.use(cors({
-    origin:["http://localhost:5173" ,"http://localhost:5174","https://ecommerce-adminpanel-rose.vercel.app"],
+    origin:["http://localhost:5173" ,"http://localhost:5174","https://ecommerce-adminpanel-co6h.vercel.app"],
     credentials:true,
 }))
 app.use(cookieParser())
