@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const adminLogin = async (req, res) => {
+export const adminLogin= async (req, res) => {
 
   try {
 
@@ -44,3 +44,5 @@ export const adminLogin = async (req, res) => {
     });
   }
 };
+
+export default adminLogin;
