@@ -7,11 +7,9 @@ try{
  const userData = await User.findById(req.userId);
  console.log(userData)
 
-//  Check if user exists
 if(!userData){
     return res.status(404).json({message:"User not found"})
 }
-// ensure cartdata is initialized
 
 let cartData = userData.cartData  || {};
 

@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 
-// Admin Auth Middleware
 const adminAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
